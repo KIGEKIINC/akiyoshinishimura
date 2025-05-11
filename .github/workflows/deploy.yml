@@ -9,6 +9,11 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      SERVER_USER: kigekiinc
+      SERVER_IP: sv5273.xserver.jp
+      SERVER_PORT: 10022
+      SERVER_PATH: /home/kigekiinc/akiyoshinishimura.com/public_html
 
     steps:
       - name: Checkout code
@@ -19,22 +24,12 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo -e "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null\n" > ~/.ssh/config
-          chmod 600 ~/.ssh/config
-
       - name: Test SSH connection
         run: |
           ssh -v -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP "echo 'SSH connection successful'"
 
       - name: Deploy to Xserver
-        env:
-          SERVER_USER: kigekiinc
-          SERVER_IP: sv5273.xserver.jp
-          SERVER_PORT: 10022
-          SERVER_PATH: /home/kigekiinc/akiyoshinishimura.com/public_html
         run: |
           ssh -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP "mkdir -p $SERVER_PATH"
           rsync -avz -e "ssh -o StrictHostKeyChecking=no -p $SERVER_PORT" --delete ./ $SERVER_USER@$SERVER_IP:$SERVER_PATH/
+

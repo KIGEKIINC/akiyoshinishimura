@@ -1,9 +1,10 @@
 name: Deploy to Xserver via SSH
+
 on:
   push:
     branches:
       - main
-　　workflow_dispatch:
+  workflow_dispatch:  # ここをpushの中から外に出す
 
 jobs:
   deploy:

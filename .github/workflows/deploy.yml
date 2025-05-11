@@ -25,6 +25,10 @@ jobs:
           echo -e "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null\n" > ~/.ssh/config
           chmod 600 ~/.ssh/config
 
+      - name: Test SSH connection
+        run: |
+          ssh -v -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP "echo 'SSH connection successful'"
+
       - name: Deploy to Xserver
         env:
           SERVER_USER: kigekiinc
@@ -33,6 +37,4 @@ jobs:
           SERVER_PATH: /home/kigekiinc/akiyoshinishimura.com/public_html
         run: |
           ssh -o StrictHostKeyChecking=no -p $SERVER_PORT $SERVER_USER@$SERVER_IP "mkdir -p $SERVER_PATH"
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no -p $SERVER_PORT" --delete ./ $SERVER_USER@$SERVER_IP:$SERVER_PATH
-
-
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no -p $SERVER_PORT" --delete ./ $SERVER_USER@$SERVER_IP:$SERVER_PATH/

@@ -1,10 +1,10 @@
-ame: Deploy to Xserver via SSH
-
+name: Deploy to Xserver via SSH
 on:
   push:
     branches:
       - main
 　　workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
